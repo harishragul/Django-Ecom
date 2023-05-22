@@ -1,0 +1,224 @@
+<!--Completed = True-->
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<div id="breadcrumb" class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="breadcrumb-header">Checkout</h3>
+        <ul class="breadcrumb-tree">
+          <li><a href="{% url 'store' %}">Home</a></li>
+          <li class="active">Checkout</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-7">
+        <div class="billing-details" id="form-wrapper">
+
+          <form id="form">
+          <div id="user-info">
+
+          <div class="section-title">
+            <h3 class="title">Ship info</h3>
+          </div>
+
+          <div class="form-group">
+            <input required class="input" type="text" name="name" placeholder="Name">
+          </div>
+
+          <div class="form-group">
+            <input required class="input form-control" id="mobile_number" type="number" name="number" placeholder="Number">
+          </div>
+
+          </div>
+
+          <hr>
+          <div id="shipping-info">
+
+          <div class="section-title">
+            <h3 class="title">Billing address</h3>
+          </div>
+
+          <div class="form-group">
+            <input required class="input" type="text" name="address" placeholder="Address">
+          </div>
+
+          <div class="form-group">
+            <input required class="input" type="text" name="city" placeholder="City">
+          </div>
+
+          <div class="form-group">
+            <input required class="input" type="text" name="state" placeholder="State">
+          </div>
+
+          <div class="form-group">
+            <input required class="input" id="zipcode" type="number" name="zipcode" placeholder="ZIP Code">
+          </div>
+        </div>
+
+        <input id="form-button" type="submit" value="CONTINUE" style="color: white; height: 40px; width: 140px; border-radius: 20px; border-style: none; margin-top: 25px;">
+      </form>
+      
+
+        </div>
+      </div>
+
+      <!-- Order Details -->
+      <div class="col-md-5 order-details">
+        <div class="section-title text-center">
+          <h3 class="title">Your Order</h3>
+        </div>
+        <div class="order-summary">
+          <div class="order-col">
+            <div><strong>PRODUCT</strong></div>
+            <div><strong>TOTAL</strong></div>
+          </div>
+
+          <div class="order-products">
+            {% for item in items %}
+            <div class="order-col">
+              <div>{{item.quantity}}x {{item.product.name}}</div>
+              <div>₹{{item.get_total}}</div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="order-col">
+            <div><strong>TOTAL</strong></div>
+            <div><strong class="order-total">₹{{order.get_cart_total}}</strong></div>
+          </div>
+        </div>
+
+        <div class="payment-method">
+          <strong>Payment Method</strong>: <p>Cash On Delivery</p>
+        </div>
+
+
+        <div class="hidden" id="payment-info"><form><button class="button primary-btn order-submit" id="make-payment">Confirm Order</button></form></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+    var shipping = '{{order.shipping}}'
+    var total = '{{order.get_cart_total|floatformat:2}}'
+
+    if (shipping == 'False') {
+      document.getElementById('shipping-info').innerHTML = '';
+    }
+
+    var form = document.getElementById('form')
+    form.addEventListener('submit', function(e){
+      e.preventDefault()
+      console.log('Form Submited')
+      document.getElementById('form-button').classList.add("hidden");
+      document.getElementById('payment-info').classList.remove("hidden");
+    })
+
+    function submitFormData(){
+      console.log('Payment button clicked')
+
+      var userFormData = {
+        'name': null,
+        'number': null,
+        'total': total,
+      }
+
+      var shippingInfo = {
+        'address': null,
+        'city': null,
+        'state': null,
+        'zipcode': null
+      }
+
+      if (shipping != 'False') {
+        userFormData.name = form.name.value
+        userFormData.number = form.number.value
+        shippingInfo.address = form.address.value
+        shippingInfo.city = form.city.value
+        shippingInfo.state = form.state.value
+        shippingInfo.zipcode = form.zipcode.value
+      }
+
+      var url = "/process_order/"
+      fetch(url, {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'X-CSRFToken':csrftoken,
+        },
+        body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo}),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+        window.location.href = "{% url 'profile' %}"
+      })
+    }
+
+    document.getElementById('make-payment').addEventListener('click', function(e){
+      submitFormData()
+    })
+
+  </script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded',function() {
+    document.querySelector("#mobile_number").onfocusout=mobile_number_check;
+    document.querySelector("#zipcode").onfocusout=zipcode_check;
+    document.getElementById('form-button').disabled = true;
+    document.getElementById('form-button').style.backgroundColor = 'lightblue';
+    },false);
+    
+    function mobile_number_check(event) {
+      if(event.target.value.length == 10){
+        document.getElementById('form-button').disabled = false;
+        document.getElementById('form-button').style.backgroundColor = 'darkblue';
+        }
+        else{
+          alert("The number must be 10 digits.")
+          document.getElementById('form-button').disabled = true;
+          document.getElementById('form-button').style.backgroundColor = 'lightblue';
+
+        }
+
+      }
+
+      function zipcode_check(event) {
+      if(event.target.value.length == 6){
+        document.getElementById('form-button').disabled = false;
+        document.getElementById('form-button').style.backgroundColor = 'darkblue';
+        }
+        else{
+          alert("The zipcode must be 6 digits.")
+          document.getElementById('form-button').disabled = true;
+          document.getElementById('form-button').style.backgroundColor = 'lightblue';
+        }
+
+      }
+  </script>
+
+  <style>
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+  }
+  </style>
+
+
+{% endblock content %}

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Kodinger">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Register</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="{% static '/css/login.css' %}">
+</head>
+
+<body class="my-login-page" style="background: linear-gradient(to bottom, #006699 0%, #66ff66 100%);">
+	<section class="h-100">
+		<div class="container h-100">
+			<div class="row justify-content-md-center h-100">
+				<div class="card-wrapper">
+					<div style="text-align: center;">
+						<img src="{% static 'images/logo.png' %}" alt="Logo">
+					</div>
+					<div class="card fat">
+						<div class="card-body">
+							<h4 class="card-title">Register</h4>
+							<form method="POST" class="my-login-validation" novalidate="">
+								{% csrf_token %}
+								<div class="form-group">
+									{{form.username}}
+								</div>
+
+								<div class="form-group">
+									{{form.email}}
+								</div>
+
+								<div class="form-group">
+									{{form.password1}}
+								</div>
+
+								<div class="form-group">
+									{{form.password2}}
+								</div>
+
+								<div class="form-group m-0">
+									<button type="submit" id="reg_sub" class="btn btn-primary btn-block">
+										Register
+									</button>
+								</div>
+							</form>
+						</div>
+						<div id="user_msg">
+							<p style="text-align: center;" id="user_len"><i class="fa fa-dot-circle-o"></i> <strong>Username availability</strong></p>
+						</div>
+						<div id="pw_msg">
+							<p style="text-align: center;" id="pw_len"><i class="fa fa-dot-circle-o"></i> <strong>Password must be more than eight characters</strong></p>
+							<p style="text-align: center;" id="pw_lc"><i class="fa fa-dot-circle-o"></i> <strong>Password must have one Small letter</strong></p>
+							<p style="text-align: center;" id="pw_uc"><i class="fa fa-dot-circle-o"></i> <strong>Password must have one Capital letter</strong></p>
+							<p style="text-align: center;" id="pw_n"><i class="fa fa-dot-circle-o"></i> <strong>Password must have one Number</strong></p>
+							<p style="text-align: center;" id="pw_sc"><i class="fa fa-dot-circle-o"></i> <strong>Password must have one Special letter</strong></p>
+						</div>
+						<div class="mt-4 text-center">
+							Already have an account <a href="{% url 'login' %}">Login</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="{% static 'js/login.js' %}"></script>
+
+	<script>
+		var form_fields = document.getElementsByTagName('input')
+		form_fields[1].placeholder='Username';
+		form_fields[2].placeholder='Email ID';
+		form_fields[3].placeholder='Enter password';
+		form_fields[4].placeholder='Re-enter Password';
+
+
+		for (var field in form_fields){
+			form_fields[field].className += ' form-control'
+		}
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function(){
+			document.querySelector("#reg_sub").disabled = true;
+			document.getElementById("pw_msg").style.display = "none";
+			document.getElementById("user_msg").style.display = "none";
+			document.querySelector('#username').oninput = name_check;
+			document.querySelector("#pw1").oninput = pw_check;
+			document.querySelector("#pw2").oninput = pw2_check;
+			document.querySelector('#reg_sub').onclick = reg_sub;
+		}, false);
+
+		function reg_sub(){
+			document.querySelector('#pw1').disabled = false;
+		}
+
+		function name_check(event) {
+			var all_names = [{% for user in users %}'{{ user.username|escapejs }}',{% endfor %}];
+			if(!all_names.includes(event.target.value) && event.target.value.length > 5){
+				document.getElementById("user_msg").style.display = "none";
+				window.uT = true;
+			}
+			else {
+				document.getElementById("user_msg").style.display = "block";
+				document.getElementById('user_len').style.color = "red";
+				window.uT = false;
+			}
+		}
+
+		function pw_check(event){
+			var c1 = pw_lenght(event);
+			var c2 = pw_lowCase(event);
+			var c3 = pw_upCase(event);
+			var c4 = pw_Num(event);
+			var c5 = pw_chr(event);
+
+			window.p1 = event.target.value;
+
+			if(c1 && c2 && c3 && c4 && c5){
+				document.getElementById("pw_msg").style.display = "none";
+				window.pT = true;
+			}
+			else{
+				document.getElementById("pw_msg").style.display = "block";
+				window.pT = false;
+			}
+
+		}
+
+		function pw2_check(event){
+			document.querySelector('#pw1').disabled = true;
+			if(p1 == event.target.value && pT && uT){
+				document.querySelector("#reg_sub").disabled = false;
+			}
+			else{
+				document.querySelector("#reg_sub").disabled = true
+			}
+
+		}
+
+		function pw_lenght(event){
+			if(event.target.value.length >= 8){
+				document.getElementById("pw_len").style.color = "green";
+				return true;
+			}
+			else{
+				document.getElementById("pw_len").style.color = "red";
+				return false;
+			}
+		}
+
+		function pw_lowCase (event) {
+			var lowerCaseLetters = /[a-z]/g;
+			if(event.target.value.match(lowerCaseLetters)){
+				document.getElementById("pw_lc").style.color = "green";
+				return true;
+			}
+			else{
+				document.getElementById("pw_lc").style.color = "red";
+				return false;
+			}
+		}
+
+		function pw_upCase(event) {
+			var upperCaseLetters = /[A-Z]/g;
+			if(event.target.value.match(upperCaseLetters)){
+				document.getElementById("pw_uc").style.color = "green";
+				return true;
+			}
+			else{
+				document.getElementById("pw_uc").style.color = "red";
+				return false;
+			}
+		}
+
+		function pw_Num(event) {
+			var numbers = /[0-9]/g;
+			if(event.target.value.match(numbers)){
+				document.getElementById("pw_n").style.color = "green";
+				return true;
+			}
+			else{
+				document.getElementById("pw_n").style.color = "red";
+				return false;
+			}
+		}
+
+		function pw_chr(event){
+			var chara = /[!@#$%&*]/;
+			if(event.target.value.match(chara)){
+				document.getElementById("pw_sc").style.color = "green";
+				return true;
+			}
+			else{
+				document.getElementById("pw_sc").style.color = "red";
+				return false;
+			}
+		}
+	</script>
+</body>
+</html>

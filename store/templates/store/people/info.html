@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Kodinger">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>User Details</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{% static '/css/login.css' %}">
+</head>
+
+<body class="my-login-page" style="background: linear-gradient(to bottom, #006699 0%, #66ff66 100%);">
+  <section class="h-100">
+    <div class="container h-100">
+      <div class="row justify-content-md-center h-100">
+        <div class="card-wrapper">
+          <div style="text-align: center; margin:50px;">
+            <h3>Store Key</h3>
+          </div>
+          <div class="card fat">
+            <div class="card-body">
+              <h4 class="card-title">User Details</h4>
+              <form method="POST" class="my-login-validation" novalidate="">
+                {% csrf_token %}
+                <div class="form-group">
+                  {{form.name}}
+                </div>
+
+                <div class="form-group">
+                  {{form.number}}
+                </div>
+
+                <div class="form-group m-0">
+                  <button id="but" type="submit" class="btn btn-primary btn-block">
+                    Update
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="{% static 'js/login.js' %}"></script>
+
+  <style>
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+  </style>
+  <script>
+    var form_fields = document.getElementsByTagName('input')
+    form_fields[1].placeholder='Full Name';
+    form_fields[2].placeholder='Mobile Number';
+    form_fields[2].type = "number"
+
+
+    for (var field in form_fields){
+      form_fields[field].className += ' form-control'
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      document.querySelector('#but').disabled = true;
+      document.querySelector('#mobile').oninput=check;
+    }, false);
+
+    function check(event){
+      if(event.target.value.length == 10){
+        document.querySelector('#but').disabled = false;
+      }
+      else{
+        document.querySelector('#but').disabled = true;
+      }
+    }
+
+  </script>
+  <style>
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+  </style>
+</body>
+</html>

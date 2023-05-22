@@ -1,0 +1,147 @@
+<!--Completed = True-->
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<!--NavBar-->
+<nav id="navigation">
+  <div class="container">
+    <div id="responsive-nav">
+      <ul class="main-nav nav navbar-nav">
+        <li class="active"><a href="{% url 'store' %}">Home</a></li>
+        <li class="active"><a href="{% url 'require' %}">Requirement</a></li>
+          {% for category in categorys %}
+            {% if category.nav_bar == True %}
+              <li><a href="{%url 'category' category.id%}">{{category.name}}</a></li>
+            {% endif %}
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<!--/NavBar-->
+
+<div class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5 col-md-push-2">
+				<div id="product-main-img">
+					<div class="product-preview">
+						<img src="{{product.image1.url}}" alt="">
+					</div>
+
+					<div class="product-preview">
+						<img src="{{product.image2.url}}" alt="">
+					</div>
+
+					<div class="product-preview">
+						<img src="{{product.image3.url}}" alt="">
+					</div>
+
+					<div class="product-preview">
+						<img src="{{product.image4.url}}" alt="">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-2  col-md-pull-5">
+				<div id="product-imgs">
+					<div class="product-preview">
+						<img src="{{product.image1.url}}" alt="">
+					</div>
+
+					<div class="product-preview">
+						<img src="{{product.image2.url}}" alt="">
+					</div>
+
+					<div class="product-preview">
+						<img src="{{product.image3.url}}" alt="">
+					</div>
+
+					<div class="product-preview">
+						<img src="{{product.image4.url}}" alt="">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-5">
+				<div class="product-details">
+					<h2 class="product-name">{{product.name}}</h2>
+					<div>
+						<h3 class="product-price">₹{{product.price}} <del class="product-old-price">₹{{product.old_price}}</del></h3>
+						<span class="product-available">In Stock</span>
+					</div>
+					<p>{{product.description}}</p>
+
+					<ul class="product-links">
+						<li>Category:</li>
+						<li><a>{{product.category}}</a></li>
+					</ul>
+					<br>
+
+					<div class="add-to-cart">
+						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="col-md-12">
+				<div id="product-tab">
+					<ul class="tab-nav">
+						<li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
+						<li><a data-toggle="tab" href="#tab2">Details</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="tab1" class="tab-pane fade in active">
+							<div class="row">
+								<div class="col-md-12">
+									<p>{{product.description}}</p>
+								</div>
+							</div>
+						</div>
+
+						<div id="tab2" class="tab-pane fade in">
+							<div class="row">
+								<div class="col-md-12">
+									<p>{{product.details}}</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="section-title text-center">
+					<h3 class="title">Related Products</h3>
+				</div>
+			</div>
+			{% for thing in products %}
+			{% if thing.category == product.category %}
+			{% if thing.id != product.id %}
+			<div class="col-md-3 col-xs-6">
+				<div class="product">
+					<div class="product-img">
+						<img src="{{thing.image1.url}}" alt="{{thing.name}}">
+					</div>
+					<div class="product-body">
+						<p class="product-category">{{thing.category}}</p>
+						<h3 class="product-name"><a href="{%url 'product' thing.id%}">{{thing.name}}</a></h3>
+						<h4 class="product-price">₹{{thing.price}} <del class="product-old-price">₹{{thing.price}}</del></h4>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock content %}

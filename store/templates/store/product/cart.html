@@ -1,0 +1,76 @@
+<!--Completed = True-->
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<!--NavBar-->
+<nav id="navigation">
+  <div class="container">
+    <div id="responsive-nav">
+      <ul class="main-nav nav navbar-nav">
+        <li class="active"><a href="{% url 'store' %}">Home</a></li>
+        <li class="active"><a href="{% url 'require' %}">Requirement</a></li>
+          {% for category in categorys %}
+            {% if category.nav_bar == True %}
+              <li><a href="{%url 'category' category.id%}">{{category.name}}</a></li>
+            {% endif %}
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<!--/NavBar-->
+
+<!--CartDetails-->
+<div id="breadcrumb" class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="breadcrumb-header">Cart</h3>
+        <ul class="breadcrumb-tree">
+          <li class="active"><strong>Quantity:</strong> {{order.get_cart_items}}</li>
+          <li><strong>Total Amount:</strong> ₹{{order.get_cart_total}}</li>
+        </ul>
+        <a href="{% url 'checkout' %}"><button style="color: white; background: red; height: 40px; width: 140px; border-radius: 20px; border-style: none; float: right; margin-top: 25px;"><strong>Checkout<strong></button></a>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<!--/CartDetails-->
+
+<!--CartSection-->
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div id="store" class="col-md-12">
+        <div class="row">
+          {% for item in items %}
+            <div class="col-md-3 col-xs-6">
+              <div class="product">
+                <div class="product-img">
+                  <img src="{{item.product.image1.url}}" alt="{{item.product.name}}">
+                </div>
+                <div class="product-body">
+                  <p class="product-category">{{item.product.category.name}}</p>
+                  <h3 class="product-name">{{item.product.name}}</h3>
+                  <h4 class="product-category"><strong>Price: </strong>₹{{item.product.price}}</h4>
+                  <div class="qty-label">
+                    Qty: {{item.quantity}}
+                    <div class="input-number">
+                      <span class="qty-up update-cart" data-product="{{item.product.id}}" data-action="add">+</span>
+                      <span class="qty-down update-cart" data-product="{{item.product.id}}" data-action="remove">-</span>                      
+                    </div>
+                  </div>
+                  <h4 class="product-price">₹{{item.get_total}}</h4>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--CartSection-->
+{% endblock content %}

@@ -1,0 +1,87 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+
+<nav id="navigation">
+  <div class="container">
+    <div id="responsive-nav">
+      <ul class="main-nav nav navbar-nav">
+        <li class="active"><a href="{% url 'store' %}">Home</a></li>
+        <li class="active"><a href="{% url 'require' %}">Requirement</a></li>
+          {% for category in categorys %}
+          {% if category.nav_bar == True %}
+            <li><a href="{%url 'category' category.id%}">{{category.name}}</a></li>
+          {% endif %}
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="breadcrumb" class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="breadcrumb-header">Profile</h3>
+        <ul class="breadcrumb-tree">
+          <li><a href="#">Home</a></li>
+          <li class="active">Your Orders</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <div class="billing-details">
+          <div class="section-title text-center">
+            <h3 class="title">Account Details</h3>
+          </div>
+          <hr>
+          <h5>Username</h5>
+          <small>{{customer.user}}</small>
+          <hr>
+          <h5>Full Name</h5>
+          <small>{{customer.name}}</small>
+          <hr>
+          <h5>Number</h5>
+          <small>{{customer.number}}</small>
+          <hr>
+          <a href="{%url 'info'%}" class="button primary-btn"><b>Update Info</b></a>
+          <a href="{%url 'logout'%}" class="button primary-btn"><b>Logout</b></a>
+        </div>
+      </div>
+
+      <!-- Order Details -->
+      <div class="col-md-5 order-details">
+        <div class="section-title text-center">
+          <h3 class="title">Your Order</h3>
+        </div>
+        <div class="order-summary">
+          <div class="order-col">
+            <div><strong>PRODUCT</strong></div>
+            <div><strong>Quantity</strong></div>
+          </div>
+          <div class="order-products">
+            {% for thing in things %}
+            {% if customer.id == thing.order.customer.id %}
+            {% if thing.order.complete == True %}
+            <div class="order-col">
+              <div><a href="{%url 'order_detail' thing.id%}">{{thing.product.name}}</a></div>
+              <div>{{thing.quantity}}</div>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

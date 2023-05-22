@@ -1,0 +1,121 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+
+<nav id="navigation">
+  <div class="container">
+    <div id="responsive-nav">
+      <ul class="main-nav nav navbar-nav">
+        <li class="active"><a href="{% url 'store' %}">Home</a></li>
+        <li class="active"><a href="{% url 'require' %}">Requirement</a></li>
+          {% for category in categorys %}
+          {% if category.nav_bar == True %}
+            <li><a href="{%url 'category' category.id%}">{{category.name}}</a></li>
+          {% endif %}
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div id="breadcrumb" class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="breadcrumb-header">Require</h3>
+        <ul class="breadcrumb-tree">
+          <li><a href="#">Home</a></li>
+          <li class="active">Your Requirements</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="container">
+    <div class="row">
+
+
+			<div class="col-md-5">
+        <div class="billing-details">
+          <div class="section-title text-center">
+            <h3 class="title">Requirement Form</h3>
+          </div>
+
+					<form method="POST" class="form-field" enctype="multipart/form-data">
+						{% csrf_token %}
+						<div class="hidden">
+							{{form.customer}}
+						</div>
+						<hr>
+						<div>
+							{{form.product}}
+						</div>
+						<hr>
+						<div>
+							{{form.category}}
+						</div>
+						<hr>
+						<div>
+              <h5>image 1</h5>
+							{{form.image}}
+						</div>
+						<hr>
+            <div>
+              <h5>image 2</h5>
+							{{form.image_2}}
+						</div>
+						<hr>
+            <div>
+              <h5>file</h5> <p>(Any kind of file like pdf, excel)</p>
+							{{form.file}}
+						</div>
+						<hr>
+						<div>
+							{{form.description}}
+						</div>
+						<hr>
+						<div>
+							<button class="button primary-btn" type="submit">Post</button>
+						</div>
+					</form>
+
+
+        </div>
+      </div>
+
+
+
+
+      <div class="col-md-7">
+        <div class="section-title text-center">
+          <h3 class="title">Your Requirement</h3>
+        </div>
+        <div class="order-summary">
+          <div class="order-col">
+            <div><strong>Product</strong></div>
+            <div><strong>Category</strong></div>
+						<div><strong>Delete</strong></div>
+          </div>
+          <div class="order-products">
+						{% for require in requires %}
+        		{% if require.customer == customer %}
+            <div class="order-col">
+              <div>{{require.product}}</div>
+              <div>{{require.category}}</div>
+							<div><a href="{%url 'require_delete' require.id%}">&#x2716</a></div>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
